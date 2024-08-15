@@ -16,5 +16,9 @@ strong obstacle avoidance capabilities while staying true to the intended route.
 components like Arduino, a motor shield, and an ultrasonic sensor. In the Arduino code, we use a 2D
 array to represent the environment where we implement the A* algorithm. Through path following
 functions, we enable the vehicle to navigate along the path to its destination
+
+
 [🐉]
+
+
 [For more details visit documentation ](https://drive.google.com/file/d/12j-7yQPndvI09vNL99VdVxRqCRZR_NQ-/view?usp=drive_link)
