@@ -5,10 +5,12 @@ A* algorithm, the vehicle calculates the most efficient route within this binary
 target. The algorithm explores the space intelligently, factoring in both the cost of reaching each point
 and an estimate of the remaining distance. Using path following functions we allow the vehicle to
 follow the path to reach the target
+
 By employing this method, the vehicle can navigate autonomously towards its goal, ensuring
 it avoids obstacles and stays on the designated path. This research is a significant step forward in
 enhancing autonomous navigation systems, providing a dependable means of finding obstacle-free
 paths for a variety of real-world applications.
+
 Moreover, by combining both hardware and advanced algorithms, our system demonstrates
 strong obstacle avoidance capabilities while staying true to the intended route. We achieve this using
 components like Arduino, a motor shield, and an ultrasonic sensor. In the Arduino code, we use a 2D
