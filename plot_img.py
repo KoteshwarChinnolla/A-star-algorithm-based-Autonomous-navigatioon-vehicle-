@@ -1,0 +1,58 @@
+from astar import shortest_path
+import numpy as np
+import matplotlib.pyplot as plt
+from arduino_send import send_arduino
+
+send_arduino=send_arduino()
+
+sp=shortest_path()
+class maze_repo:
+    def plot_maze(self,maze):
+
+        fig, ax = plt.subplots(figsize=(10, 10))
+        colored_maze = np.zeros((maze.shape[0], maze.shape[1], 3))
+        # Set walls to black
+        colored_maze[maze == 0] = [0, 0, 0]
+        # Set passages to white
+        colored_maze[maze == 1] = [1, 1, 1]
+        
+        ax.imshow(colored_maze)
+        ax.set_xticks([]), ax.set_yticks([])
+
+        green_cells = []
+        directions_1 = []
+        cid = [None]  # List to hold connection id
+
+        def on_click(event):
+            if event.inaxes and event.button == 1:  # Check for left mouse button
+                x, y = int(event.xdata + 0.5), int(event.ydata + 0.5)  # Round to nearest integer
+                if maze[y, x] == 1:  # Only allow clicking on passages
+                    colored_maze[y, x] = [1, 0, 0]  # Set cell to green
+                    green_cells.append((y, x))
+                    ax.imshow(colored_maze)
+                    plt.draw()
+                    if len(green_cells) > 1:
+                        # Find shortest path between last two green cells
+                        path, directions = sp.a_star_search(maze, green_cells[-2], green_cells[-1])
+                        directions_1.append(directions)
+                        print("Path:", path)
+                        print("Directions:", directions)
+
+                        cus_array=send_arduino.costamise(directions)
+                        cus_array.append('s')
+                        # Draw the path
+                        for i in range(len(path) - 1):
+                            y1, x1 = path[i]
+                            y2, x2 = path[i + 1]
+                            # ax.plot([x1, x2], [y1, y2], color='blue', linewidth=8)
+                            ax.annotate("", xy=(x2, y2), xytext=(x1, y1),arrowprops=dict(arrowstyle="fancy", color='blue', linewidth=1))
+                            plt.pause(0.0025)  # Allow GUI to update
+                            plt.draw()
+                            print(cus_array[i])
+                            # sendtoarduino(cus_array[i])
+                            # time.sleep(0.1)  # Delay for visualization
+                        print('stop')
+                        
+        cid[0] = fig.canvas.mpl_connect('button_press_event', on_click)
+        plt.show()
+        return directions_1

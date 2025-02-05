@@ -3,8 +3,9 @@ import numpy as np
 import heapq
 import serial
 import time
+from PIL import Image
 
-arduino = serial.Serial(port='COM7', baudrate=9600, timeout=1)
+# arduino = serial.Serial(port='COM7', baudrate=9600, timeout=1)
 
 def plot_maze(maze):
     fig, ax = plt.subplots(figsize=(10, 10))
@@ -35,13 +36,21 @@ def plot_maze(maze):
                     directions_1.append(directions)
                     print("Path:", path)
                     print("Directions:", directions)
+
+                    cus_array=costamise(directions)
+                    cus_array.append('s')
                     # Draw the path
                     for i in range(len(path) - 1):
                         y1, x1 = path[i]
                         y2, x2 = path[i + 1]
-                        ax.plot([x1, x2], [y1, y2], color='blue',linewidth = 5)
+                        # ax.plot([x1, x2], [y1, y2], color='blue', linewidth=8)
+                        ax.annotate("", xy=(x2, y2), xytext=(x1, y1),arrowprops=dict(arrowstyle="fancy", color='blue', linewidth=1))
+                        plt.pause(0.0025)  # Allow GUI to update
                         plt.draw()
-                    print(costamise(directions))
+                        print(cus_array[i])
+                        # sendtoarduino(cus_array[i])
+                        # time.sleep(0.1)  # Delay for visualization
+                    print('stop')
                     
     cid[0] = fig.canvas.mpl_connect('button_press_event', on_click)
     plt.show()
@@ -51,8 +60,8 @@ def a_star_search(maze, start, end):
     def heuristic(a, b):
         return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-    neighbors = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-    directions = ["right", "down", "left", "up"]
+    neighbors = [(0, 1), (1, 0), (0, -1), (-1, 0) ,(1,-1),(-1,1),(1,1),(-1,-1)]
+    directions = ["right", "down", "left", "up","right-up","right-down","left-up","left-down"]
     close_set = set()
     came_from = {}
     gscore = {start: 0}
@@ -103,21 +112,24 @@ def a_star_search(maze, start, end):
 
     return False
 
-# Predefined maze matrix (1 for passages, 0 for walls)
-maze = np.array([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-    [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
-    [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
-    [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-])
+
+
+image_path = "house1.jpg"
+image = Image.open(image_path).convert("L") 
+
+
+image_resized = image.resize((254, 254))
+
+
+image_array = np.array(image_resized)
+
+
+threshold = 128
+binary_matrix = (image_array > threshold).astype(int)
+
+maze=binary_matrix
+
+print(binary_matrix)
 
 def costamise(d):
     prev='down'
@@ -178,7 +190,6 @@ def costamise(d):
             else:
                 cusarray.append('b')
                 cusarray.append('f')
-    functionsend(cusarray)
     return cusarray
 
 def sendtoarduino(data):
@@ -192,7 +203,7 @@ def functionsend(Directions):
     # Directions = plot_maze(maze)
     Directions.append('s')
     for d in Directions:
-        sendtoarduino(d)
+        # sendtoarduino(d)
         print(f"Sent: {d}")
         time.sleep(0.9) 
 

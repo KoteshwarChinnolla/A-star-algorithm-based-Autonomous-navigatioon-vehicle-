@@ -9,8 +9,8 @@ char command;
 
 void setup() {  
   pinMode(2,OUTPUT);   
- Serial.begin(9600);  // Set the baud rate for Bluetooth module.
- Stop();  // Initialize with motors stopped
+ Serial.begin(9600); 
+ Stop();
 }
 
 void loop() {
@@ -40,15 +40,10 @@ void loop() {
 }
 
 void forward() {
-    // motor1.setSpeed(255); // Define maximum velocity
-    // motor1.run(FORWARD); // Rotate the motor clockwise
-    motor2.setSpeed(255); // Define maximum velocity
-    motor2.run(FORWARD); // Rotate the motor clockwise
-
-    // motor3.setSpeed(255); // Define maximum velocity
-    // motor3.run(BACKWARD); // Rotate the motor clockwise
-    motor4.setSpeed(255); // Define maximum velocity
-    motor4.run(FORWARD); // Rotate the motor clockwise
+    motor2.setSpeed(255);
+    motor2.run(FORWARD);
+    motor4.setSpeed(255);
+    motor4.run(FORWARD);
 }
 
 void back() {
@@ -57,27 +52,17 @@ void back() {
 }
 
 void left() {
-    // motor1.setSpeed(255); // Define maximum velocity
-    // motor1.run(FORWARD); // Rotate the motor clockwise
-    motor2.setSpeed(255); // Define maximum velocity
-    motor2.run(FORWARD); // Rotate the motor counterclockwise
-
-    // motor3.setSpeed(255); // Define maximum velocity
-    // motor3.run(FORWARD); // Rotate the motor clockwise
-    motor4.setSpeed(255); // Define maximum velocity
-    motor4.run(BACKWARD); // Rotate the motor counterclockwise
+    motor2.setSpeed(255);
+    motor2.run(FORWARD); 
+    motor4.setSpeed(255);
+    motor4.run(BACKWARD);
 }
 
 void right() {
-    // motor1.setSpeed(255); // Define maximum velocity
-    // motor1.run(BACKWARD); // Rotate the motor counterclockwise
-    motor2.setSpeed(255); // Define maximum velocity
-    motor2.run(BACKWARD); // Rotate the motor clockwise
-
-    // motor3.setSpeed(255); // Define maximum velocity
-    // motor3.run(BACKWARD); // Rotate the motor counterclockwise
-    motor4.setSpeed(255); // Define maximum velocity
-    motor4.run(FORWARD); // Rotate the motor clockwise
+    motor2.setSpeed(255);
+    motor2.run(BACKWARD);
+    motor4.setSpeed(255); 
+    motor4.run(FORWARD); 
 }
 
 void Stop() {
