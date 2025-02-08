@@ -5,71 +5,70 @@ import serial
 import time
 from PIL import Image
 
-class send_arduino:
-    def costamise(self,d):
-        prev='down'
-        curr=''
-        cusarray=[]
-        for i in range(1,len(d)):
-            curr=d[i]
-            if prev=='down':
-                prev=curr
-                if curr =='down':
-                    cusarray.append('f')
-                elif curr=='up':
-                    cusarray.append('b')
-                    cusarray.append('f')
-                elif curr=='right':
-                    cusarray.append('r')
-                    cusarray.append('f')
-                else:
-                    cusarray.append('l')
-                    cusarray.append('f')
-            elif prev=='up':
-                prev=curr
-                if curr =='down':
-                    cusarray.append('b')
-                    cusarray.append('f')
-                elif curr=='up':
-                    cusarray.append('f')
 
-                elif curr=='right':
-                    cusarray.append('l')
-                    cusarray.append('f')
-                else:
-                    cusarray.append('r')
-                    cusarray.append('f')
-            elif prev=='left':
-                prev=curr
-                if curr =='down':
-                    cusarray.append('r')
-                    cusarray.append('f')
-                elif curr=='up':
-                    cusarray.append('l')
-                    cusarray.append('f')
-                elif curr=='right':
-                    cusarray.append('b')
-                    cusarray.append('f')
-                else:
-                    cusarray.append('f')
+# arduino = serial.Serial(port='COM7', baudrate=9600, timeout=1)
+class send_arduino:
+    def angles_to_send(self,data):
+        # print(data)
+        dec = {
+            "up":90,
+            "down":270,
+            "left":0,
+            "right":180,
+            "right-up":135,
+            "left-up":45,
+            "left-down":315,
+            "right-down":225
+        }
+        send=[]
+        pa=ca=angle=a=c=0
+        p="left"
+        for i in data:
+            if(p==i):
+                # print('f')
+                send.append("f")
+                continue
+            ca=dec[i]
+            angle=ca-pa
+            if(angle>=0):
+                a=angle
             else:
-                prev=curr
-                if curr =='down':
-                    cusarray.append('l')
-                    cusarray.append('f')
-                elif curr=='up':
-                    cusarray.append('r')
-                    cusarray.append('f')
-                elif curr=='right':
-                    cusarray.append('f')
-                else:
-                    cusarray.append('b')
-                    cusarray.append('f')
-        return cusarray
+                a=360-abs(angle)
+            c=360-a
+            pa=ca
+            p=i
+            if(c<a):
+                # print(f'c{c}')
+                send.append(f'c{c}')
+            else:
+                # print(f'a{a}')
+                send.append(f'a{a}')
+
+        return send
+            
+    def decode(self,data):
+        rotate=''
+        angle=0
+        if(data=='f'):
+            rotate=' '
+            # self.sendtoarduino('f')
+        else:
+            angle=int(data[1:])
+            if(data[0]=='c'):
+                for i in range(angle//45):
+                    rotate+=' r'
+                    # self.sendtoarduino('r')
+            else:
+                for i in range(angle//45):
+                    rotate+=' l'
+                    # self.sendtoarduino('l')
+        return rotate
 
     def sendtoarduino(self,data):
         arduino.write((data + '\n').encode())
         if data=='f':
             time.sleep(0.07)
         else:
-            time.sleep(0.07)
+            time.sleep(0.035)
+# s=send_arduino()
+# print(s.angles_to_send(data=['right-down', 'right-down', 'right-down', 'right-down', 'right-down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down']))

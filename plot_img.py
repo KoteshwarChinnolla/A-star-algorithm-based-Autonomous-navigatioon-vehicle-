@@ -35,12 +35,12 @@ class maze_repo:
                         # Find shortest path between last two green cells
                         path, directions = sp.a_star_search(maze, green_cells[-2], green_cells[-1])
                         directions_1.append(directions)
+                        directions.append("left")
+                        path.append((path[-1][0], path[-1][1]+1))
                         print("Path:", path)
                         print("Directions:", directions)
 
-                        cus_array=send_arduino.costamise(directions)
-                        cus_array.append('s')
-                        # Draw the path
+                        cus_array=send_arduino.angles_to_send(data=directions[1:])
                         for i in range(len(path) - 1):
                             y1, x1 = path[i]
                             y2, x2 = path[i + 1]
@@ -48,7 +48,8 @@ class maze_repo:
                             ax.annotate("", xy=(x2, y2), xytext=(x1, y1),arrowprops=dict(arrowstyle="fancy", color='blue', linewidth=1))
                             plt.pause(0.0025)  # Allow GUI to update
                             plt.draw()
-                            print(cus_array[i])
+                            
+                            print(f'{cus_array[i]} {send_arduino.decode(cus_array[i])}')
                             # sendtoarduino(cus_array[i])
                             # time.sleep(0.1)  # Delay for visualization
                         print('stop')

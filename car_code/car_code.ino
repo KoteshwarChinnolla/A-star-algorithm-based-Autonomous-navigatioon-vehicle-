@@ -53,7 +53,7 @@ void back() {
 
 void left() {
     motor2.setSpeed(255);
-    motor2.run(FORWARD); 
+    motor2.run(FORWARD);
     motor4.setSpeed(255);
     motor4.run(BACKWARD);
 }

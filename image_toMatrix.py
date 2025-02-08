@@ -14,7 +14,7 @@ class get_maze:
         image_array = np.array(image_resized)
 
         # Apply threshold to create binary matrix (0 for white areas, 1 for dark areas)
-        threshold = 128
+        threshold = 150
         binary_matrix = (image_array > threshold).astype(int)
 
         return binary_matrix

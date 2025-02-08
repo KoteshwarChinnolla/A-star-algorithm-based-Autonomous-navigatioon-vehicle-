@@ -10,7 +10,7 @@ class shortest_path:
             return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
         neighbors = [(0, 1), (1, 0), (0, -1), (-1, 0) ,(1,-1),(-1,1),(1,1),(-1,-1)]
-        directions = ["left", "down", "right", "up","left-down","right-up","left-up","right-down"]
+        directions = ["left", "down", "right", "up","right-down","left-up","left-down","right-up"]
         close_set = set()
         came_from = {}
         gscore = {start: 0}
