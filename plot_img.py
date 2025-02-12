@@ -1,13 +1,14 @@
 from astar import shortest_path
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 from arduino_send import send_arduino
 
 send_arduino=send_arduino()
-
+FILE_PATH = "lastpossition.json"
 sp=shortest_path()
 class maze_repo:
-    def plot_maze(self,maze):
+    def plot_maze(self,maze,FILE_NAME):
 
         fig, ax = plt.subplots(figsize=(10, 10))
         colored_maze = np.zeros((maze.shape[0], maze.shape[1], 3))
@@ -23,6 +24,15 @@ class maze_repo:
         directions_1 = []
         cid = [None]  # List to hold connection id
 
+        with open(FILE_PATH, "r") as file:
+            data=json.load(file)
+
+        lastele=data[FILE_NAME].split(" ")
+        colored_maze[int(lastele[1]), int(lastele[0])] = [1, 0, 0]
+        green_cells.append((int(lastele[1]), int(lastele[0])))
+        ax.imshow(colored_maze)
+        plt.draw()
+        
         def on_click(event):
             if event.inaxes and event.button == 1:  # Check for left mouse button
                 x, y = int(event.xdata + 0.5), int(event.ydata + 0.5)  # Round to nearest integer
@@ -31,6 +41,7 @@ class maze_repo:
                     green_cells.append((y, x))
                     ax.imshow(colored_maze)
                     plt.draw()
+                    print(green_cells)
                     if len(green_cells) > 1:
                         # Find shortest path between last two green cells
                         path, directions = sp.a_star_search(maze, green_cells[-2], green_cells[-1])
@@ -40,6 +51,10 @@ class maze_repo:
                         print("Path:", path)
                         print("Directions:", directions)
 
+                        with open(FILE_PATH, "w") as file:
+                            data[FILE_NAME]=str(path[-1][1])+" "+str(path[-1][0])
+                            json.dump(data, file)
+                        
                         cus_array=send_arduino.angles_to_send(data=directions[1:])
                         for i in range(len(path) - 1):
                             y1, x1 = path[i]

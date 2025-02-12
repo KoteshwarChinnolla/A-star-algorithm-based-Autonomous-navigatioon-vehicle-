@@ -122,4 +122,4 @@ class Select:
         # Run Tkinter main loop
         root.mainloop()
 
-        return self.selected_image_path  # Return the selected path after closing the window
+        return (self.selected_image_path,self.selected_image_name)  # Return the selected path after closing the window

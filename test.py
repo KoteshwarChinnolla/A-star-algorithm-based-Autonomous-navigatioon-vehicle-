@@ -9,5 +9,5 @@ from images_select import Select
 s=Select()
 path=s.display()
 maze_fun = get_maze()
-maze=maze_fun.maze(path)
-maze_repo.plot_maze(maze_repo,maze=maze)
+maze=maze_fun.maze(path[0])
+maze_repo.plot_maze(maze_repo,maze=maze,FILE_NAME=path[1])
