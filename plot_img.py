@@ -61,12 +61,13 @@ class maze_repo:
                             y2, x2 = path[i + 1]
                             # ax.plot([x1, x2], [y1, y2], color='blue', linewidth=8)
                             ax.annotate("", xy=(x2, y2), xytext=(x1, y1),arrowprops=dict(arrowstyle="fancy", color='blue', linewidth=1))
-                            plt.pause(0.0025)  # Allow GUI to update
+                            plt.pause(0.0005)  # Allow GUI to update
                             plt.draw()
                             
-                            print(f'{cus_array[i]} {send_arduino.decode(cus_array[i])}')
+                            sent = send_arduino.decode(cus_array[i])
                             # sendtoarduino(cus_array[i])
                             # time.sleep(0.1)  # Delay for visualization
+                        send_arduino.sendtoarduino('s')
                         print('stop')
                         
         cid[0] = fig.canvas.mpl_connect('button_press_event', on_click)

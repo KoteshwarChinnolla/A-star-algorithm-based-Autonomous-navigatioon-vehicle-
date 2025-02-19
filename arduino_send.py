@@ -6,7 +6,7 @@ import time
 from PIL import Image
 
 
-# arduino = serial.Serial(port='COM7', baudrate=9600, timeout=1)
+arduino = serial.Serial(port='COM7', baudrate=9600, timeout=1)
 class send_arduino:
     def angles_to_send(self,data):
         # print(data)
@@ -51,24 +51,31 @@ class send_arduino:
         angle=0
         if(data=='f'):
             rotate=' '
-            # self.sendtoarduino('f')
+            # print('sent f')
+            self.sendtoarduino('f')
         else:
             angle=int(data[1:])
             if(data[0]=='c'):
                 for i in range(angle//45):
                     rotate+=' r'
-                    # self.sendtoarduino('r')
+                    # print('sent r')
+                    self.sendtoarduino('r')
             else:
                 for i in range(angle//45):
                     rotate+=' l'
-                    # self.sendtoarduino('l')
+                    # print('sent l')
+                    self.sendtoarduino('l')
         return rotate
 
     def sendtoarduino(self,data):
+        print('sent',data)
         arduino.write((data + '\n').encode())
         if data=='f':
-            time.sleep(0.07)
+            time.sleep(0.1)
         else:
-            time.sleep(0.035)
+            time.sleep(0.05)
 # s=send_arduino()
-# print(s.angles_to_send(data=['right-down', 'right-down', 'right-down', 'right-down', 'right-down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down']))
+# data = s.angles_to_send(data=['right-down', 'right-down', 'right-down', 'right-down', 'right-down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down', 'down'])
+# for i in data:
+#     sent=s.decode(i)
+    # print("sent",sent)
