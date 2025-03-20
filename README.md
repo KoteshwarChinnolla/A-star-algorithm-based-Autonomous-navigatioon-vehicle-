@@ -4,6 +4,8 @@ Automation is revolutionized in every field. This significantly reduces the huma
 
 [For more details click here visit documentation ](https://drive.google.com/file/d/12j-7yQPndvI09vNL99VdVxRqCRZR_NQ-/view?usp=drive_link)
 
+![Dcoder](https://github.com/KoteshwarChinnolla/A-star-algorithm-based-Autonomous-navigatioon-vehicle-/blob/main/Decoder.png)
+
 
   Till now we have focused on how natural language is transformed into locations and finding the shortest path between locations (nodes). the challenge is how we can make the vehicle follow the path. one obvious way is to send the signals to Arduino with motors and motor drivers. as the Arduino contains the code to make sure the motors rotate as per the signals.
 
